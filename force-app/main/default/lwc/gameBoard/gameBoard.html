@@ -17,7 +17,14 @@
                 <section class="game-panel">
                     <ul class="grid-container">
                         <template for:each={cards} for:item="card">
-                            <c-game-tile key={card.id} list-class={card.listClass} type={card.type} icon={card.icon}></c-game-tile>
+                            <c-game-tile 
+                                key={card.id} 
+                                identifier={card.id} 
+                                list-class={card.listClass} 
+                                type={card.type} 
+                                icon={card.icon}
+                                onshow={showTileHandler}>
+                            </c-game-tile>
                         </template>
                     </ul>
                 </section>
