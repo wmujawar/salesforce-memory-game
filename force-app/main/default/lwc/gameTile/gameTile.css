@@ -1,7 +1,7 @@
 .card {
     background-color: #447ce5;
     font-size: 2rem;
-    color: white;
+    color: #ffffff;
     border-radius: 5px;
     width: 3.7rem;
     height: 3.7rem;
@@ -14,4 +14,22 @@
 
 .hide {
     display: none;
+}
+
+.disable {
+    pointer-events: none;
+}
+
+.selected {
+    background-color: #808080;
+}
+
+.won {
+    pointer-events: none;
+    background-color: #008000;
+}
+
+.loose {
+    pointer-events: none;
+    background-color: #d35050;
 }

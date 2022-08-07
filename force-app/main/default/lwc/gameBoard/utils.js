@@ -17,3 +17,25 @@ export function shuffleArray(unshuffeledArray) {
 
     return shuffeledArray;
 }
+
+/**
+ * Remove class from the list of classes
+ * 
+ * @param {String} classList list of class as a string
+ * @param {String} classToRemove class to remove from the list of classes
+ * @returns {String}
+ */
+export function removeClass(classList, classToRemove) {
+    classList = classList.replace(classToRemove, '').replace('  ', ' ').trim();
+    return classList;
+}
+
+/**
+ * Delay execution
+ * 
+ * @param {number} time 
+ * @returns 
+ */
+export function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
