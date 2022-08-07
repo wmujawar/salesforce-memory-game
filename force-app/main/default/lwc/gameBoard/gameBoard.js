@@ -1,13 +1,16 @@
 import { LightningElement, track } from 'lwc';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import fontawasome from '@salesforce/resourceUrl/fontawasome';
-import { shuffleArray, removeClass, delay } from './utils';
+import { shuffleArray, removeClass, delay, formatNumber } from './utils';
 
 export default class GameBoard extends LightningElement {
 
-    isLibLoaded = false;
     move = 0;
-    seconds = 10;
+    timer = '00:00';
+
+    // Private variable not to be mapped with HTML
+    timerID = 0;
+    isLibLoaded = false;
     selectedTile = [];
 
     @track cards = [
@@ -38,6 +41,8 @@ export default class GameBoard extends LightningElement {
         ])
             .then(() => {
                 this.cards = [...shuffleArray(this.cards)];
+                this.move = 0;
+                this.timer = '00:00';
                 this.isLibLoaded = true;
             })
             .catch(error => console.error(`Error in loading libraries\n${error}`));
@@ -61,7 +66,9 @@ export default class GameBoard extends LightningElement {
 
     async showTileHandler(event) {
         const details = event.detail;
-        let isLost = false;
+
+        if (this.timer === '00:00' && this.move === 0)
+            this.timerID = this.startTimer();
 
         for (let card of this.cards) {
             if (card.id === details.id) {
@@ -94,10 +101,9 @@ export default class GameBoard extends LightningElement {
                 this.selectedTile[0].listClass += " won"
                 this.selectedTile[1].listClass += " won"
                 this.move++;
-                isLost = false;
             } else {
                 this.showLostAnimation()
-                await delay(1000);
+                await delay(750);
 
                 // hide
                 this.selectedTile[0].icon += " hide";
@@ -109,7 +115,6 @@ export default class GameBoard extends LightningElement {
 
                 this.selectedTile[0].listClass = removeClass(this.selectedTile[0].listClass, 'loose');
                 this.selectedTile[1].listClass = removeClass(this.selectedTile[1].listClass, 'loose');
-                isLost = true;
             }
 
             this.selectedTile[0].listClass = removeClass(this.selectedTile[0].listClass, 'selected');
@@ -130,6 +135,10 @@ export default class GameBoard extends LightningElement {
 
             this.selectedTile = [];
         }
+
+        if (this.move === 8) {
+            this.endTimer();
+        }
     }
 
     resetGame() {
@@ -140,5 +149,30 @@ export default class GameBoard extends LightningElement {
                 card.icon += " hide";
         }
         this.cards = [...shuffleArray(this.cards)];
+        this.move = 0;
+        this.selectedTile = [];
+        this.endTimer();
+        this.timer = '00:00';
+    }
+
+    startTimer() {
+        let hours = 0;
+        let minute = 0;
+        const timerId = setInterval(() => {
+            minute++;
+            hours = (minute % 60) === 0 ? hours + 1 : hours
+            minute = minute % 60;
+            this.timer = `${formatNumber(hours, 2)}:${formatNumber(minute, 2)}`;
+        }, 1000);
+
+        return timerId;
+    }
+
+    endTimer() {
+        if (this.timerID == undefined)
+            return;
+
+        clearInterval(this.timerID);
+        this.timerID = undefined;
     }
 }

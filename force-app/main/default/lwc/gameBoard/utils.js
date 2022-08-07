@@ -14,7 +14,6 @@ export function shuffleArray(unshuffeledArray) {
         shuffeledArray.push(unshuffeledArray.splice(random, 1)[0]);
     }
 
-
     return shuffeledArray;
 }
 
@@ -38,4 +37,11 @@ export function removeClass(classList, classToRemove) {
  */
 export function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
+}
+
+export function formatNumber(number, noOfDigit) {
+    return number.toLocaleString('en-US', {
+        minimumIntegerDigits: noOfDigit,
+        useGrouping: false
+      })
 }
